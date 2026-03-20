@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: horario_ept_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-horario_ept}
+      MYSQL_USER: ${MYSQL_USER:-horario_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-horario_pass}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/conf/my.cnf:/etc/mysql/conf.d/custom.cnf
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: horario_ept_backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE:-horario_ept}
+      DB_USER: ${MYSQL_USER:-horario_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-horario_pass}
+      DB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      JWT_SECRET: ${JWT_SECRET:-supersecretjwtkey_change_in_production}
+      NODE_ENV: production
+      PORT: 3001
+    volumes:
+      - backend_uploads:/app/src/uploads
+      - backend_backups:/app/src/backups
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: horario_ept_frontend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8087}:80"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+  backend_uploads:
+  backend_backups:
+
+networks:
+  app_network:
+    driver: bridge

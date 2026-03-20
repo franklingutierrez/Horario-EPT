@@ -1,0 +1,13 @@
+# Normalizar saltos de línea a LF en el repositorio
+# (evita problemas al clonar en Linux/Docker)
+* text=auto eol=lf
+
+# Binarios — no modificar
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.sql  text eol=lf

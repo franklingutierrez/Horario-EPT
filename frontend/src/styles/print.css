@@ -1,0 +1,286 @@
+/* ============================================================
+   Estilos de impresión — Horario semanal
+   A4 horizontal — membrete + grilla en la misma página
+   ============================================================ */
+
+/* Solo visibles al imprimir */
+.print-header { display: none; }
+.print-footer  { display: none; }
+
+@media print {
+
+  /* ── Reset global ─────────────────────────────────────────── */
+  * {
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+  }
+
+  /* ── Ocultar elementos de UI ──────────────────────────────── */
+  .navbar,
+  .week-controls,
+  .room-tabs,
+  .week-nav,
+  .week-actions,
+  .btn,
+  .sidebar,
+  .support-btn,
+  .res-delete-btn,
+  .res-lock-icon,
+  .slot-empty-hint,
+  .toast-container,
+  .modal-overlay { display: none !important; }
+
+  /* ── Layout de la página ──────────────────────────────────── */
+
+  /* CLAVE: eliminar min-height que empujaba la grilla a la pág 2 */
+  .schedule-page {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .schedule-main {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* ── Membrete / encabezado ────────────────────────────────── */
+  .print-header {
+    display: flex !important;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: .5rem;
+    margin-bottom: .6rem;
+    border-bottom: 2.5px solid #1d4ed8;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-logo {
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 4px;
+  }
+
+  .print-logo-placeholder {
+    height: 64px;
+    width: 64px;
+    background: #dbeafe;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22pt;
+    font-weight: 800;
+    color: #1d4ed8;
+    flex-shrink: 0;
+  }
+
+  .print-header-text { flex: 1; }
+
+  .print-institution {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+  }
+
+  .print-report-title {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-top: 2px;
+  }
+
+  .print-week-label {
+    font-size: 8.5pt;
+    color: #64748b;
+    margin-top: 1px;
+  }
+
+  .print-meta {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #94a3b8;
+    align-self: flex-end;
+  }
+
+  /* ── Grilla del horario ───────────────────────────────────── */
+  .schedule-grid-wrapper {
+    overflow: visible !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .schedule-grid {
+    display: grid !important;
+    grid-template-columns: 100px repeat(5, 1fr) !important;
+    border: 1.5px solid #cbd5e1 !important;
+    background: #cbd5e1 !important;
+    gap: 1px !important;
+    min-width: unset !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Encabezados de día */
+  .grid-header-cell {
+    background: #1d4ed8 !important;
+    color: #ffffff !important;
+    padding: .35rem .3rem !important;
+    font-size: 7.5pt !important;
+    font-weight: 700 !important;
+    text-align: center;
+  }
+
+  .grid-header-cell.today {
+    background: #1e40af !important;
+  }
+
+  .grid-day-date {
+    font-size: 7pt !important;
+    color: rgba(255,255,255,.8) !important;
+    font-weight: 400 !important;
+  }
+
+  /* Columna de hora */
+  .grid-time-cell {
+    background: #f1f5f9 !important;
+    padding: .25rem .4rem !important;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .time-label {
+    font-size: 7.5pt !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+  }
+
+  .time-range {
+    font-size: 6.5pt !important;
+    color: #64748b !important;
+  }
+
+  /* Celdas de slot */
+  .grid-slot-cell {
+    min-height: 38px !important;
+    max-height: 38px !important;
+    background: #ffffff !important;
+    overflow: hidden;
+  }
+
+  .grid-slot-cell.slot-disabled {
+    background: #f8fafc !important;
+  }
+
+  .grid-slot-cell.slot-reserved {
+    background: #eff6ff !important;
+    border-left: 2.5px solid #3b82f6 !important;
+  }
+
+  /* Contenido de reserva */
+  .reservation-card {
+    padding: .2rem .35rem !important;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .res-teacher {
+    font-size: 7pt !important;
+    font-weight: 700 !important;
+    color: #1e3a8a !important;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .res-subject {
+    font-size: 6.5pt !important;
+    color: #334155 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .res-grade {
+    font-size: 6pt !important;
+    color: #64748b !important;
+  }
+
+  /* Descanso/recreo */
+  .disabled-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .disabled-badge {
+    font-size: 6.5pt !important;
+    color: #94a3b8 !important;
+    background: none !important;
+    font-style: italic;
+  }
+
+  /* ── Pie de página ────────────────────────────────────────── */
+  .print-footer {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: .5rem;
+    padding-top: .35rem;
+    border-top: 1.5px solid #e2e8f0;
+    font-size: 7pt;
+    color: #94a3b8;
+    gap: 1rem;
+  }
+
+  .print-footer-left {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .print-footer-left::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #2563eb;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .print-footer-right {
+    font-style: italic;
+    color: #94a3b8;
+  }
+
+  /* ── Configuración de página A4 horizontal ────────────────── */
+  @page {
+    size: A4 landscape;
+    margin: 1.2cm 1.5cm;
+  }
+}
