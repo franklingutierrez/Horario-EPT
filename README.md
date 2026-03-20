@@ -1,4 +1,5 @@
 # Horario-EPT — Sistema de Reserva de Laboratorios
+<img width="1321" height="621" alt="image" src="https://github.com/user-attachments/assets/a68e56c7-0f1c-4bc9-be2b-00a54d0522c1" />
 
 > Aplicación web para gestionar la reserva de ambientes de innovación tecnológica en instituciones educativas secundarias de nivel secundario.
 
